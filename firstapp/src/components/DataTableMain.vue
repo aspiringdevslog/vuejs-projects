@@ -20,9 +20,12 @@
 	      	<th>
 	      		Data 3
 	      	</th>
-	      	<tr v-for="data in dataArray">
+	      	<th>
+	      		Comments
+	      	</th>
+	      	<tr v-for="(data, key) in dataArray" :key="key">
 	      		<td v-if="data.first.filter">
-	      			{{ data.first.details }}
+	      			{{ data.first.details }} 
 	      		</td>
 	      		<td v-if="!data.first.filter">
 	      			{{  }}
@@ -32,7 +35,12 @@
 	      		</td>	   
 	      		<td>
 	      			{{ data.third }}
-	      		</td>	   		
+	      		</td>	 
+	      		<td>
+	      			{{ data.comment }}
+	      			<input type="text" v-model="comment[key]">
+	      			<button v-on:click="addComment(key)">Add comment</button>
+	      		</td>	  		
 	      	</tr>
 		</table>
 
@@ -50,30 +58,38 @@ export default {
   },
   data: function(){
   	return {
-  		dataArray: [
-  			{
-  				first: {
-  					details: "random data under first column",
-  					filter: 1,
-  				},
-  				second: "2nd column data"
-  			},
-  			{
-  				first: {
-  					details: "random data under 1st column",
-  					filter: 1,
-  				},
-  				second: "2nd column data"
-  			},
-  			{
-  				first: {
-  					details: "random data",
-  					filter: 1,
-  				},
-  				second: "2nd column data"
-  			},
-  		],
-  		filterCondition: "cond"
+  		dataArray: [],
+  		// 	{
+  		// 		first: {
+  		// 			details: "random data under first column",
+  		// 			filter: 1,
+  		// 		},
+  		// 		second: "2nd column data",
+  		// 		comment: "nil"
+  		// 	},
+  		// 	{
+  		// 		first: {
+  		// 			details: "random data under 1st column",
+  		// 			filter: 1,
+  		// 		},
+  		// 		second: "2nd column data",
+  		// 		comment: "nil"
+  		// 	},
+  		// 	{
+  		// 		first: {
+  		// 			details: "random data",
+  		// 			filter: 1,
+  		// 		},
+  		// 		second: "2nd column data",
+  		// 		comment: "nil"
+  		// 	},
+  		// ],
+  		filterCondition: "cond",
+  		comment: [
+  			"insert comment1",
+  			"insert comment2",
+  			"insert comment3",
+  		]
   	}
   },
   computed: {
@@ -102,10 +118,21 @@ export default {
   			}
   		}
   	},
+  	addComment(key){
+  		this.dataArray[key].comment = this.comment[key];
+  		// comment does not save directly into the data, need some way to store the json and load it through life cycle hooks
+  	},
   		
+  },
+  beforeMount(){
+  	this.dataArray = JSON.parse(localStorage.getItem("dataArray"));
   },
   created(){
   	// this.dataArrayBackup = this.dataArray; // first make a copy of the original data array
+  },
+  updated(){
+  	console.log("updated");
+  	localStorage.setItem("dataArray", JSON.stringify(this.dataArray));	
   }
 
 
