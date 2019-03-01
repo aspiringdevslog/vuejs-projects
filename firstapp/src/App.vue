@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <data-table></data-table>
+    <data-table>
+
+    </data-table>
   </div>
 </template>
 
