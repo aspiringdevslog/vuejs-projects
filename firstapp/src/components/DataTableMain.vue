@@ -24,11 +24,8 @@
 	      		Comments
 	      	</th>
 	      	<tr v-for="(data, key) in dataArray" :key="key">
-	      		<td v-if="data.first.filter">
-	      			{{ data.first.details }} 
-	      		</td>
-	      		<td v-if="!data.first.filter">
-	      			{{  }}
+				<td>
+	      			{{ data.second }}
 	      		</td>
 	      		<td>
 	      			{{ data.second }}
@@ -42,6 +39,36 @@
 	      			<button v-on:click="addComment(key)">Add comment</button>
 	      		</td>	  		
 	      	</tr>
+		</table>
+
+		<table>
+			<th>
+	        	Data 1
+	      	</th>
+	      	<th>
+	      		Data 2
+	      	</th>
+	      	<th>
+	      		Data 3
+	      	</th>
+	      	<th>
+	      		Comments
+	      	</th>
+	      	<tr>
+				<td>
+					<input type="text" v-model="insertData.first.details">
+				</td> 
+				<td>
+					<input type="text" v-model="insertData.second.details">
+				</td> 
+				<td>
+					<input type="text" v-model="insertData.third.details">
+				</td> 
+				<td>
+					<input type="text" v-model="insertData.comment.details">
+				</td>
+	      	</tr>
+	      	<button v-on:click="addNewData">Add Above Data</button>
 		</table>
 
 
@@ -58,44 +85,73 @@ export default {
   },
   data: function(){
   	return {
-  		dataArray: [],
-  		// 	{
-  		// 		first: {
-  		// 			details: "random data under first column",
-  		// 			filter: 1,
-  		// 		},
-  		// 		second: "2nd column data",
-  		// 		comment: "nil"
-  		// 	},
-  		// 	{
-  		// 		first: {
-  		// 			details: "random data under 1st column",
-  		// 			filter: 1,
-  		// 		},
-  		// 		second: "2nd column data",
-  		// 		comment: "nil"
-  		// 	},
-  		// 	{
-  		// 		first: {
-  		// 			details: "random data",
-  		// 			filter: 1,
-  		// 		},
-  		// 		second: "2nd column data",
-  		// 		comment: "nil"
-  		// 	},
-  		// ],
+  		dataArray: {
+  			first: {
+  				details: "for data 0",
+  				filter: 1
+  			},
+  			second: {
+  				details: "for data 1",
+  				filter: 1
+  			},
+  			third: {
+  				details: "for data 0",
+  				filter: 1
+  			},
+  			comment: {
+  				details: "for comments",
+  				filter: 1
+  			}
+  		},
   		filterCondition: "cond",
   		comment: [
   			"insert comment1",
   			"insert comment2",
   			"insert comment3",
-  		]
+  		],
+  		insertData: {
+  			first: {
+  				details: "for data 0",
+  				filter: 1
+  			},
+  			second: {
+  				details: "for data 1",
+  				filter: 1
+  			},
+  			third: {
+  				details: "for data 0",
+  				filter: 1
+  			},
+  			comment: {
+  				details: "for comments",
+  				filter: 1
+  			}
+  		}
   	}
   },
   computed: {
 
   }, 
   methods: {
+  	addNewData(){
+  		var tempDataArray = JSON.parse(localStorage.getItem("dataArray"));
+
+  		if(tempDataArray == null){
+  			console.log("null");
+  			localStorage.setItem("dataArray", JSON.stringify(this.insertData));
+  		} else {
+  			tempDataArray.add(this.insertData);
+  			localStorage.setItem("dataArray", JSON.stringify(this.tempDataArray));
+  		}
+
+  		// console.log(tempDataArray);
+  		// localStorage.setItem("test", JSON.stringify(this.tempDataArray));
+  		// console.log(this.insertData);
+  		// tempDataArray.push(this.insertData);
+  		// console.log(tempDataArray);
+  		// localStorage.setItem("newDataArray", JSON.stringify(this.tempDataArray));
+
+  	},
   	changeData(){
   		for(var data in this.dataArray){
   			this.dataArray.third = "Hello";
@@ -122,7 +178,6 @@ export default {
   		this.dataArray[key].comment = this.comment[key];
   		// comment does not save directly into the data, need some way to store the json and load it through life cycle hooks
   	},
-  		
   },
   beforeMount(){
   	this.dataArray = JSON.parse(localStorage.getItem("dataArray"));
