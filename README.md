@@ -16,3 +16,18 @@ Components would probably include:
 - Uploading data (as JSON)
 - Adding comments to different data rows
 - Filter panel
+
+
+# Design Decision
+Database: Firebase/Firestore, because it's free and seems easy to implement
+UI Components: Vuetify, there seems to be many pre-made templates to use
+
+# Dependencies
+Make sure to install in firstapp folder rather than the root folder
+
+- vue-router
+- vuetify
+- firebase
+- vue-resource
+- vue-firestore
+- vuefire
