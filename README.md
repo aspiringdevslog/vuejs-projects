@@ -31,3 +31,9 @@ Make sure to install in firstapp folder rather than the root folder
 - vue-resource
 - vue-firestore
 - vuefire
+
+
+
+#Plans
+
+To abstract out the data field from data table, let's use the dataArray's key as prop

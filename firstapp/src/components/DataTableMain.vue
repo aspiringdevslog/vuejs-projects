@@ -23,7 +23,13 @@
 	      	<th>
 	      		Comments
 	      	</th>
-	      	<tr v-for="(data, key) in dataArray" :key="key">
+
+	      	<tr>
+	      		<data-row></data-row>
+	      	</tr>
+	      	
+
+<!-- 	      	<tr v-for="(data, key) in dataArray" :key="key">
 	      		<td v-if="data.first.filter">
 	      			{{ data.first.details }} 
 	      		</td>
@@ -41,7 +47,7 @@
 	      			<input type="text" v-model="comment[key]">
 	      			<button v-on:click="addComment(key)">Add comment</button>
 	      		</td>	  		
-	      	</tr>
+	      	</tr> -->
 		</table>
 
 
@@ -51,10 +57,17 @@
 </template>
 
 <script>
+
+import DataRow from './DataRow.vue'
+
+
 export default {
   name: 'DataTable',
   props: {
     msg: String
+  },
+  components: {
+  	'data-row': DataRow
   },
   data: function(){
   	return {
