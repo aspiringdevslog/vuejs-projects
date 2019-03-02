@@ -8,9 +8,13 @@
 			<input type="text" v-model="filterCondition">
 			<button v-on:click="filter(filterCondition)">Filter Data 1</button>
 			<button v-on:click="clearFilter">Clear Filters</button>
+			<button v-on:click="addFiller">Add Filler Data</button>
 		</div>
 
-		<table>
+		<table >
+			<th>
+				Key
+			</th>
 			<th>
 	        	Data 1
 	      	</th>
@@ -23,9 +27,15 @@
 	      	<th>
 	      		Comments
 	      	</th>
+	      	<tr>
+	      		
+	      	</tr>
 	      	<tr v-for="(data, key) in dataArray" :key="key">
+	      		<td>
+	      			{{ key}}
+	      		</td>
 	      		<td v-if="data.first.filter">
-	      			{{ data.first.details }} 
+	      			{{ data.first.details }}
 	      		</td>
 	      		<td v-if="!data.first.filter">
 	      			{{  }}
@@ -41,6 +51,29 @@
 	      			<input type="text" v-model="comment[key]">
 	      			<button v-on:click="addComment(key)">Add comment</button>
 	      		</td>	  		
+	      		<button v-on:click="deleteRow(key)">Delete Row</button>
+	      	</tr>
+
+	      	<tr>
+	      		<td>
+	      			{{ lastKeyInDataArray }}
+	      		</td>
+	      		<td>
+	      			{{ insertDataArray[0].first.details }}
+	      			<input v-model="insertDataArray[0].first.details">
+	      		</td>
+	      		<td>
+	      			{{ insertDataArray[0].second }}
+	      			<input v-model="insertDataArray[0].second">
+	      		</td>
+	      		<td>
+	      			
+	      		</td>
+	      		<td>
+	      			{{ insertDataArray[0].comment }}
+	      			<input v-model="insertDataArray[0].comment">
+	      		</td>
+	      		<button v-on:click="addData(lastKeyInDataArray)">Add data</button>
 	      	</tr>
 		</table>
 
@@ -58,44 +91,58 @@ export default {
   },
   data: function(){
   	return {
-  		dataArray: [],
-  		// 	{
-  		// 		first: {
-  		// 			details: "random data under first column",
-  		// 			filter: 1,
-  		// 		},
-  		// 		second: "2nd column data",
-  		// 		comment: "nil"
-  		// 	},
-  		// 	{
-  		// 		first: {
-  		// 			details: "random data under 1st column",
-  		// 			filter: 1,
-  		// 		},
-  		// 		second: "2nd column data",
-  		// 		comment: "nil"
-  		// 	},
-  		// 	{
-  		// 		first: {
-  		// 			details: "random data",
-  		// 			filter: 1,
-  		// 		},
-  		// 		second: "2nd column data",
-  		// 		comment: "nil"
-  		// 	},
-  		// ],
+  		dataArray: [
+  			{
+  				first: {
+  					details: "random data under first column",
+  					filter: 1,
+  				},
+  				second: "2nd column data",
+  				comment: "nil"
+  			},
+  			{
+  				first: {
+  					details: "random data under 1st column",
+  					filter: 1,
+  				},
+  				second: "2nd column data",
+  				comment: "nil"
+  			},
+  			{
+  				first: {
+  					details: "random data",
+  					filter: 1,
+  				},
+  				second: "2nd column data",
+  				comment: "nil"
+  			},
+  		],
+  		insertDataArray: [
+  			{
+  				first: {
+  					details: "filler",
+  					filter: 1,
+  				},
+  				second: "insert data",
+  				comment: "nil"
+  			}
+  		],
   		filterCondition: "cond",
   		comment: [
   			"insert comment1",
   			"insert comment2",
   			"insert comment3",
-  		]
+  		],
+  		lastKeyInDataArray: 0
   	}
   },
   computed: {
 
   }, 
   methods: {
+  	deleteRow(key){
+  		this.dataArray.pop();
+  	},
   	changeData(){
   		for(var data in this.dataArray){
   			this.dataArray.third = "Hello";
@@ -120,23 +167,44 @@ export default {
   	},
   	addComment(key){
   		this.dataArray[key].comment = this.comment[key];
+  		localStorage.setItem("dataArray", JSON.stringify(this.dataArray));
   		// comment does not save directly into the data, need some way to store the json and load it through life cycle hooks
   	},
-  		
-  },
-  beforeMount(){
-  	this.dataArray = JSON.parse(localStorage.getItem("dataArray"));
-  },
-  created(){
-  	// this.dataArrayBackup = this.dataArray; // first make a copy of the original data array
-  },
-  updated(){
-  	console.log("updated");
-  	localStorage.setItem("dataArray", JSON.stringify(this.dataArray));	
-  }
+  	addFiller(){
+  		this.dataArray[this.lastKeyInDataArray] = this.insertDataArray[0];
+  		localStorage.setItem("dataArray", JSON.stringify(this.dataArray));
+  		this.lastKeyInDataArray ++;
+  	},
+  	addData(key){
+  		console.log("add");
+  		console.log(key);
+  		this.dataArray[this.lastKeyInDataArray] = this.insertDataArray[0];
+  		localStorage.setItem("dataArray", JSON.stringify(this.dataArray));
+  		this.lastKeyInDataArray ++;
+  	}
+	
+},
+beforeMount(){
+	if(JSON.parse(localStorage.getItem("dataArray")) == null){
 
+	} else {
+		this.dataArray = JSON.parse(localStorage.getItem("dataArray"));
+		this.lastKeyInDataArray = this.dataArray.length;
+		console.log(this.lastKeyInDataArray);
+	}
+	
+},
+created(){
+	// this.dataArrayBackup = this.dataArray; // first make a copy of the original data array
+},
+updated(){
+	// console.log("updated");
+	// localStorage.setItem("dataArray", JSON.stringify(this.dataArray));	
+	// this.dataArray = JSON.parse(localStorage.getItem("dataArray"));
+},
 
 }
+
 </script>
 
 <style scoped>
@@ -156,7 +224,7 @@ table {
 
 th {
 	border: solid #000 0.5px;
-	width: 33%;
+	/*width: 33%;*/
 }
 
 td {

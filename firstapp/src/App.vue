@@ -1,19 +1,22 @@
 <template>
   <div id="app">
-    <data-table>
+<!--     <data-table>
 
-    </data-table>
+    </data-table> -->
+  <vdt></vdt>
+
   </div>
 </template>
 
 <script>
 import DataTable from './components/DataTableMain.vue'
-
+import VuetifyDataTable from './components/VuetifyDataTable.vue'
 
 export default {
   name: 'firstapp',
   components: {
-    'data-table': DataTable
+    'data-table': DataTable,
+    'vdt': VuetifyDataTable
   }
 }
 </script>
@@ -25,7 +28,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
 
   text-align: center;
-  color: #2c3e50;
+  /*color: #2c3e50;*/
   margin: 0px;
   margin-top: 10px;
 /*  margin-top: 60px;*/
