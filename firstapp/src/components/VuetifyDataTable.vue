@@ -88,6 +88,32 @@
 		</v-data-table>
 
 		<br>
+
+		<v-data-table
+		:headers="rankingHeaders"
+		:items="rankings"
+		:rows-per-page-items="rowsChoice"
+		class="elevation-1"
+		>
+			<template v-slot:items="props">
+				<!-- <td></td> -->
+				<td>{{ props.item.first }}</td>
+				<td>{{ props.item.second }}</td>
+				<td>{{ props.item.third }}</td>
+				<td>
+		          <v-icon
+		            small
+		            @click="deleteRankedItem(props.item)"
+		          >
+		            delete
+		          </v-icon>
+		        </td>
+		        </td>
+
+			</template>
+		</v-data-table>
+		<br>
+
 		<v-card>
 			<v-card-title>
 				<span class="headline">{{ formTitle }}</span>
@@ -98,33 +124,42 @@
 					<v-layout wrap>
 						<v-flex xs12 sm6 md4>
 							<v-autocomplete
-							label="Dessert name"
-							v-model="editedItem.name"
+							label="First Dessert"
+							v-model="rankedDesserts.first"
 							:items="dessertList"
 							>
 							</v-autocomplete>
 						</v-flex>
 
 						<v-flex xs12 sm6 md4>
-							<v-text-field v-model="editedItem.price" label="Price"></v-text-field>
+							<v-autocomplete
+							label="Second Dessert"
+							v-model="rankedDesserts.second"
+							:items="dessertList"
+							>
+							</v-autocomplete>
 						</v-flex>
 						
 						<v-flex xs12 sm6 md4>
-							<v-text-field v-model="editedItem.desc" label="Description"></v-text-field>
+							<v-autocomplete
+							label="Third Dessert"
+							v-model="rankedDesserts.third"
+							:items="dessertList"
+							>
+							</v-autocomplete>
 						</v-flex>
 					</v-layout>
 				</v-container>
 			</v-card-text>
-			{{ editedIndex }}
 
 			<v-card-actions>
 				<v-spacer></v-spacer>
 				<!-- <v-btn color="blue darken-1" flat v-on:click="close">Cancel</v-btn> -->
-				<v-btn color="blue darken-1" flat v-on:click="save">Save</v-btn>
+				<v-btn color="blue darken-1" flat v-on:click="saveRanked">Save</v-btn>
 			</v-card-actions>
 		</v-card>
-		{{ editedIndex }}
 
+		
 	</div>
 </v-app>
 
@@ -134,13 +169,42 @@
 	export default {
 		data: function(){
 			return {
+				rankingHeaders: [
+					{
+						text: 'First',
+						value: 'first'
+					},
+					{
+						text: 'Second',
+						value: 'second'
+					},
+					{
+						text: 'Third',
+						value: 'third'
+					},
+					{
+						text: 'Actions'
+					}
+				],
 				editedIndex: -1,
 				dialog: false,
 				editedItem: { // just set up the structure for this item and headers, then the rest will follow
 				},
+				rankedDesserts: [
+					// first: "",
+					// second: "",
+					// third: ""
+				],
 				rowsChoice: [
 					10,25,50,100,
 					{"text":"$vuetify.dataIterator.rowsPerPageAll","value":-1}
+				],
+				rankings: [
+					// {
+					// 	first: "Ice Cream",
+					// 	second: "Chocolate",
+					// 	third: "Mango Pudding"
+					// }
 				],
 				headers: [
 					{
@@ -182,7 +246,10 @@
 		      this.editedItem = Object.assign({}, item)
 		      this.dialog = true
 		    },
-
+		    deleteRankedItem (item) {
+		      const index = this.rankedDesserts.indexOf(item)
+		      confirm('Are you sure you want to delete this item?') && this.rankedDesserts.splice(index, 1)
+		    },
 		    deleteItem (item) {
 		      const index = this.desserts.indexOf(item)
 		      confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
@@ -200,6 +267,18 @@
 		        } else {
 		          this.desserts.push(this.editedItem)
 		        }
+		       	localStorage.setItem('desserts', JSON.stringify(this.desserts));
+	    	
+		        this.close()
+		      },
+		      saveRanked () {
+		      	console.log(this.rankedDesserts);
+		        if (this.editedIndex > -1) {
+		          Object.assign(this.rankings[this.editedIndex], this.rankedDesserts)
+		        } else {
+		          this.rankings.push(this.rankedDesserts);
+		        }
+		        localStorage.setItem('rankings', JSON.stringify(this.rankings));
 		        this.close()
 		      },
 		      clearLocal(key){
@@ -221,15 +300,26 @@
 	    },
 	    created() {
 	    	var tempDesserts = JSON.parse(localStorage.getItem('desserts'));
-	    	console.log(tempDesserts);
-	    	console.log(this.desserts);
+	    	// console.log(tempDesserts);
+	    	// console.log(this.desserts);
 	    	this.desserts = tempDesserts;
 	    	if(tempDesserts === null) {
-	    		localStorage.setItem('desserts', JSON.stringify(this.desserts));
+	    		// localStorage.setItem('desserts', JSON.stringify(this.desserts));
+	    		this.desserts = [];
+	    	}
+
+	    	var tempRankings = JSON.parse(localStorage.getItem('rankings'));
+	    	// console.log(tempRankings);
+	    	// console.log(this.rankings);
+
+	    	this.rankings = tempRankings;
+	    	if(tempRankings === null) {
+	    		// localStorage.setItem('rankings', JSON.stringify(this.rankings));
+	    		this.rankings = [];
 	    	}
 	    },
 	    updated() {
-	    	localStorage.setItem('desserts', JSON.stringify(this.desserts));
+
 	    },
 	    beforeMount() {
 	    	console.log(this.desserts);
