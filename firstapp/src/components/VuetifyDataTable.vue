@@ -2,27 +2,11 @@
 
 <v-app dark class="inspire">
 	<div class="vuetify-data-table">
-<v-btn color="warning" dark class="mb-2" v-on:click="clearLocal('desserts')">Clear Data</v-btn>
-		<v-dialog v-model="dialog" max-width="500px">
-			<template v-slot:activator="{ on }">
-				<v-btn color="warning" dark class="mb-2" v-on="on">Clear Data</v-btn>
-				<!-- <v-btn color="warning" dark class="mb-2" v-on:click="clearLocal('desserts')">Clear Data</v-btn> -->
-			</template>
 
-			<v-card>
-				<v-card-title>
-					You are about to delete ALL data!
-				</v-card-title>
-				<v-card-text>
-					<v-container grid-list-md>
-						<v-layout wrap>
-							hi	
-						</v-layout>
-					</v-container>
-				</v-card-text>
-			</v-card>
+		<v-btn color="warning" dark class="mb-2" v-on:click="clearLocal('desserts')">Clear Data</v-btn>
 
-		</v-dialog>
+
+
 
 		<v-dialog v-model="dialog" max-width="500px">
 			<template v-slot:activator="{ on }">
@@ -71,7 +55,7 @@
 				<!-- <td></td> -->
 				<td>{{ props.item.name }}</td>
 				<td>{{ props.item.price }}</td>
-
+				<td>{{ props.item.desc }}</td>
 				<td>
 		          <v-icon
 		            small
@@ -118,6 +102,10 @@
 					{
 						text: 'Price',
 						value: 'price'
+					},
+					{
+						text: 'Description',
+						value: 'desc'
 					},
 					{
 						text: 'Actions',
