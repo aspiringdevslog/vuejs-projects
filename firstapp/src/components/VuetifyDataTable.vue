@@ -3,36 +3,37 @@
 <v-app dark class="inspire">
 	<div class="vuetify-data-table">
 
+		<button v-on:click="clearLocal('desserts')">Clear Local Storage</button>
 
-      <v-dialog v-model="dialog" max-width="500px">
-        <template v-slot:activator="{ on }">
-          <v-btn color="primary" dark class="mb-2" v-on="on">Add Dessert</v-btn>
-        </template>
-        <v-card>
-          <v-card-title>
-            <span class="headline">{{ formTitle }}</span>
-          </v-card-title>
+		<v-dialog v-model="dialog" max-width="500px">
+		<template v-slot:activator="{ on }">
+		<v-btn color="primary" dark class="mb-2" v-on="on">Add Dessert</v-btn>
+		</template>
+		<v-card>
+		<v-card-title>
+		<span class="headline">{{ formTitle }}</span>
+		</v-card-title>
 
-          <v-card-text>
-            <v-container grid-list-md>
-              <v-layout wrap>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.price" label="Price"></v-text-field>
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card-text>
+		<v-card-text>
+		<v-container grid-list-md>
+		<v-layout wrap>
+		<v-flex xs12 sm6 md4>
+		<v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
+		</v-flex>
+		<v-flex xs12 sm6 md4>
+		<v-text-field v-model="editedItem.price" label="Price"></v-text-field>
+		</v-flex>
+		</v-layout>
+		</v-container>
+		</v-card-text>
 
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat v-on:click="close">Cancel</v-btn>
-            <v-btn color="blue darken-1" flat v-on:click="save">Save</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+		<v-card-actions>
+		<v-spacer></v-spacer>
+		<v-btn color="blue darken-1" flat v-on:click="close">Cancel</v-btn>
+		<v-btn color="blue darken-1" flat v-on:click="save">Save</v-btn>
+		</v-card-actions>
+		</v-card>
+		</v-dialog>
 
 		<hr>
 		<v-data-table
@@ -75,9 +76,9 @@
 			return {
 				editedIndex: -1,
 				dialog: false,
-				editedItem: {
-					name: "Ice Cream",
-					price: "$0.00"
+				editedItem: { // just set up the structure for this item and headers, then the rest will follow
+					name: "",
+					price: ""
 				},
 				rowsChoice: [
 					10,25,50,100,
@@ -99,18 +100,18 @@
 					}
 				],
 				desserts: [
-					{
-						name: 'Ice Cream',
-						price: '$2.00'
-					},
-					{
-						name: 'Cake',
-						price: '$4.50'
-					},
-					{
-						name: 'Brownie',
-						price: '$3.00'
-					}
+					// {
+					// 	name: 'Ice Cream',
+					// 	price: '$2.00'
+					// },
+					// {
+					// 	name: 'Cake',
+					// 	price: '$4.50'
+					// },
+					// {
+					// 	name: 'Brownie',
+					// 	price: '$3.00'
+					// }
 				]
 			}
 		},
@@ -146,6 +147,10 @@
 		          this.desserts.push(this.editedItem)
 		        }
 		        this.close()
+		      },
+		      clearLocal(key){
+		      	localStorage.setItem(key, []);
+		      	this.desserts = [];
 		      }
 		},
 		computed: {
@@ -153,6 +158,29 @@
 	        return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
 	      }
 	    },
+	    beforeCreate(){
+	    	// console.log(this.desserts);
+	    	// var tempDesserts = JSON.parse(localStorage.getItem('desserts'));
+
+	    	// this.desserts = tempDesserts;
+	    	// console.log(this.desserts);
+	    },
+	    created() {
+	    	var tempDesserts = JSON.parse(localStorage.getItem('desserts'));
+	    	console.log(tempDesserts);
+	    	console.log(this.desserts);
+	    	this.desserts = tempDesserts;
+	    	if(tempDesserts === null) {
+	    		localStorage.setItem('desserts', JSON.stringify(this.desserts));
+	    	}
+	    },
+	    updated() {
+	    	localStorage.setItem('desserts', JSON.stringify(this.desserts));
+	    },
+	    beforeMount() {
+	    	console.log(this.desserts);
+	    }
+
 	}
 </script>
 
