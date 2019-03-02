@@ -31,6 +31,7 @@
 	      		
 	      	</tr>
 	      	<tr v-for="(data, key) in dataArray" :key="key">
+
 	      		<td>
 	      			{{ key}}
 	      		</td>
@@ -77,6 +78,36 @@
 	      	</tr>
 		</table>
 
+		<table>
+			<th>
+	        	Data 1
+	      	</th>
+	      	<th>
+	      		Data 2
+	      	</th>
+	      	<th>
+	      		Data 3
+	      	</th>
+	      	<th>
+	      		Comments
+	      	</th>
+	      	<tr>
+				<td>
+					<input type="text" v-model="insertData.first.details">
+				</td> 
+				<td>
+					<input type="text" v-model="insertData.second.details">
+				</td> 
+				<td>
+					<input type="text" v-model="insertData.third.details">
+				</td> 
+				<td>
+					<input type="text" v-model="insertData.comment.details">
+				</td>
+	      	</tr>
+	      	<button v-on:click="addNewData">Add Above Data</button>
+		</table>
+
 
 
 
@@ -91,6 +122,7 @@ export default {
   },
   data: function(){
   	return {
+
   		dataArray: [
   			{
   				first: {
@@ -127,21 +159,60 @@ export default {
   				comment: "nil"
   			}
   		],
+
   		filterCondition: "cond",
   		comment: [
   			"insert comment1",
   			"insert comment2",
   			"insert comment3",
   		],
-  		lastKeyInDataArray: 0
+
+  		lastKeyInDataArray: 0,
+  		insertData: {
+  			first: {
+  				details: "for data 0",
+  				filter: 1
+  			},
+  			second: {
+  				details: "for data 1",
+  				filter: 1
+  			},
+  			third: {
+  				details: "for data 0",
+  				filter: 1
+  			},
+  			comment: {
+  				details: "for comments",
+  				filter: 1
+  			}
+  		}
   	}
   },
   computed: {
 
   }, 
   methods: {
+
   	deleteRow(key){
   		this.dataArray.pop();
+    },
+  	addNewData(){
+  		var tempDataArray = JSON.parse(localStorage.getItem("dataArray"));
+
+  		if(tempDataArray == null){
+  			console.log("null");
+  			localStorage.setItem("dataArray", JSON.stringify(this.insertData));
+  		} else {
+  			tempDataArray.add(this.insertData);
+  			localStorage.setItem("dataArray", JSON.stringify(this.tempDataArray));
+  		}
+
+  		// console.log(tempDataArray);
+  		// localStorage.setItem("test", JSON.stringify(this.tempDataArray));
+  		// console.log(this.insertData);
+  		// tempDataArray.push(this.insertData);
+  		// console.log(tempDataArray);
+  		// localStorage.setItem("newDataArray", JSON.stringify(this.tempDataArray));
   	},
   	changeData(){
   		for(var data in this.dataArray){
@@ -170,6 +241,7 @@ export default {
   		localStorage.setItem("dataArray", JSON.stringify(this.dataArray));
   		// comment does not save directly into the data, need some way to store the json and load it through life cycle hooks
   	},
+
   	addFiller(){
   		this.dataArray[this.lastKeyInDataArray] = this.insertDataArray[0];
   		localStorage.setItem("dataArray", JSON.stringify(this.dataArray));
@@ -202,6 +274,19 @@ updated(){
 	// localStorage.setItem("dataArray", JSON.stringify(this.dataArray));	
 	// this.dataArray = JSON.parse(localStorage.getItem("dataArray"));
 },
+
+  },
+  beforeMount(){
+  	this.dataArray = JSON.parse(localStorage.getItem("dataArray"));
+  },
+  created(){
+  	// this.dataArrayBackup = this.dataArray; // first make a copy of the original data array
+  },
+  updated(){
+  	console.log("updated");
+  	localStorage.setItem("dataArray", JSON.stringify(this.dataArray));	
+  }
+
 
 }
 
