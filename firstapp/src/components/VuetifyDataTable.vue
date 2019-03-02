@@ -1,6 +1,6 @@
 <template>
 
-<v-app dark class="inspire">
+<v-app light class="inspire">
 	<div class="vuetify-data-table">
 
 		<v-btn color="warning" dark class="mb-2" v-on:click="clearLocal('desserts')">Clear Data</v-btn>
@@ -23,6 +23,23 @@
 						<v-layout wrap>
 							<v-flex xs12 sm6 md4>
 								<v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
+								<v-autocomplete
+								v-model="editedItem.name"
+								:items="dessertList"
+								>
+									<template v-slot:append-outer>
+										<v-slide-x-reverse-transition
+										mode="out-in"
+										>
+											<v-icon
+											:key="`icon-${isEditing}`"
+											:color="isEditing ? 'success' : 'info'"
+											@click="isEditing = !isEditing"
+											v-text="isEditing ? 'mdi-check-outline' : 'mdi-circle-edit-outline'"
+											></v-icon>
+										</v-slide-x-reverse-transition>
+									</template>
+								</v-autocomplete>
 							</v-flex>
 
 							<v-flex xs12 sm6 md4>
@@ -74,6 +91,34 @@
 
 			</template>
 		</v-data-table>
+
+
+		<table>
+			<tr>
+				<th>
+					Dessert 1
+				</th>
+
+			</tr>
+			<tr>
+				<td>
+				<v-autocomplete
+				v-model="dropModel"
+				:items="dessertList"
+				>
+					<template v-slot:append-outer>
+						<v-slide-x-reverse-transition
+						mode="out-in"
+						>
+						</v-slide-x-reverse-transition>
+					</template>
+				</v-autocomplete>
+
+				{{ dropModel }}
+				</td>
+			</tr>
+		</table>
+
 	</div>
 </v-app>
 
@@ -86,8 +131,6 @@
 				editedIndex: -1,
 				dialog: false,
 				editedItem: { // just set up the structure for this item and headers, then the rest will follow
-					name: "",
-					price: ""
 				},
 				rowsChoice: [
 					10,25,50,100,
@@ -125,7 +168,11 @@
 					// 	name: 'Brownie',
 					// 	price: '$3.00'
 					// }
-				]
+				],
+				dessertList: [
+					'Ice Cream', 'Chocolate Ice Cream', 'Chocolate Mud Pie', 'Chocolate Brownie', 'White Chocolate Cake', 'Dark Choclate Cake', 'Waffles with Cream Cheese', 'Waffles with Ice Cream'
+				],
+				dropModel: null,
 			}
 		},
 		methods: {
@@ -200,7 +247,7 @@
 <style scoped>
 .vuetify-data-table {
 	width: 80%;
-	margin: 10px auto;
+	margin: 0px auto;
 }	
 
 </style>
