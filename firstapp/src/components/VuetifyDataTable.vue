@@ -49,8 +49,7 @@
 			</v-card>
 		</v-dialog>
 
-
-		<hr>
+		<br>
 
 		<v-data-table
 		:headers="headers"
