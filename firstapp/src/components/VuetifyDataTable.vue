@@ -3,13 +3,55 @@
 <v-app light class="inspire">
 	<div class="vuetify-data-table">
 
-		<data-menu>
-			
-		</data-menu>
+		<data-menu></data-menu>
 
-		<ranked-data-menu></ranked-data-menu>
+		<v-dialog v-model="dialog" max-width="80%">
+			<v-card>
+				<v-card-title>
+					<span class="headline">{{ formTitle }}</span>
+				</v-card-title>
+
+				<v-card-text>
+					<v-container grid-list-md>
+						<v-layout wrap>
+							<v-flex xs12 sm6 md4>
+								<!-- <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field> -->
+								<v-autocomplete
+								label="Dessert name"
+								v-model="editedItem.name"
+								:items="dessertList"
+								>
+	<!-- 									<template v-slot:append-outer>
+										<v-slide-x-reverse-transition
+										mode="out-in"
+										>
+										</v-slide-x-reverse-transition>
+									</template> -->
+								</v-autocomplete>
+							</v-flex>
+
+							<v-flex xs12 sm6 md4>
+								<v-text-field v-model="editedItem.price" label="Price"></v-text-field>
+							</v-flex>
+							
+							<v-flex xs12 sm6 md4>
+								<v-text-field v-model="editedItem.desc" label="Description"></v-text-field>
+							</v-flex>
+						</v-layout>
+					</v-container>
+				</v-card-text>
+
+				<v-card-actions>
+					<v-spacer></v-spacer>
+					<v-btn color="blue darken-1" flat v-on:click="close">Cancel</v-btn>
+					<v-btn color="blue darken-1" flat v-on:click="save">Save</v-btn>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
+
 
 		<hr>
+
 		<v-data-table
 		:headers="headers"
 		:items="desserts"
@@ -42,6 +84,8 @@
 
 		<br>
 
+		<ranked-data-menu></ranked-data-menu>
+		<br>
 		<v-data-table
 		:headers="rankingHeaders"
 		:items="rankings"
@@ -155,27 +199,34 @@ import RankedDataMenu from './RankedDataMenu.vue'
 				this.desserts.push(tempDessert);
 			},
 			editItem (item) {
-		      this.editedIndex = this.desserts.indexOf(item)
-		      this.editedItem = Object.assign({}, item)
-		      this.dialog = true
+				this.editedIndex = this.desserts.indexOf(item)
+				this.editedItem = Object.assign({}, item)
+				this.dialog = true
 		    },
 		    deleteRankedItem (item) {
-		      const index = this.rankings.indexOf(item)
-		      confirm('Are you sure you want to delete this item?') && this.rankings.splice(index, 1)
-		      localStorage.set('rankings', JSON.stringify(this.rankings));
+				const index = this.rankings.indexOf(item)
+				confirm('Are you sure you want to delete this item?') && this.rankings.splice(index, 1)
+				localStorage.set('rankings', JSON.stringify(this.rankings));
 		    },
 		    deleteItem (item) {
-		      const index = this.desserts.indexOf(item)
-		      confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
-		    },
-		    close () {
+				const index = this.desserts.indexOf(item)
+				confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
+		    },close () {
 		        this.dialog = false
 		        setTimeout(() => {
 		          this.editedItem = Object.assign({}, this.defaultItem)
 		          this.editedIndex = -1
 		        }, 300)
-		      },
-		      save () {
+		    },
+		   	save () {
+
+		      	if(localStorage.getItem('desserts') != null){
+		      		this.desserts = JSON.parse(localStorage.getItem('desserts'));
+		      	} else {
+		      		this.desserts = [];
+		      	}
+		      	
+
 		        if (this.editedIndex > -1) {
 		          Object.assign(this.desserts[this.editedIndex], this.editedItem)
 		        } else {
@@ -184,33 +235,9 @@ import RankedDataMenu from './RankedDataMenu.vue'
 		       	localStorage.setItem('desserts', JSON.stringify(this.desserts));
 	    	
 		        this.close()
-		      },
-		      saveRanked () {
-		      	console.log(this.rankedDesserts);
-		        if (this.editedIndex > -1) {
-		          Object.assign(this.rankings[this.editedIndex], this.rankedDesserts)
-		        } else {
-		          this.rankings.push(this.rankedDesserts);
-		        }
-		        localStorage.setItem('rankings', JSON.stringify(this.rankings));
-		        this.close()
-		      },
-		      clearLocal(key){
-		      	localStorage.setItem(key, []);
-		      	this.desserts = [];
-		      }
+		      },	
 		},
 		computed: {
-	      formTitle () {
-	        return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-	      }
-	    },
-	    beforeCreate(){
-	    	// console.log(this.desserts);
-	    	// var tempDesserts = JSON.parse(localStorage.getItem('desserts'));
-
-	    	// this.desserts = tempDesserts;
-	    	// console.log(this.desserts);
 	    },
 	    created() {
 	    	var tempDesserts = JSON.parse(localStorage.getItem('desserts'));
@@ -232,12 +259,6 @@ import RankedDataMenu from './RankedDataMenu.vue'
 	    		this.rankings = [];
 	    	}
 	    },
-	    updated() {
-
-	    },
-	    beforeMount() {
-	    	console.log(this.desserts);
-	    }
 	}
 
 </script>
