@@ -23,6 +23,9 @@
 		<v-flex xs12 sm6 md4>
 		<v-text-field v-model="editedItem.price" label="Price"></v-text-field>
 		</v-flex>
+				<v-flex xs12 sm6 md4>
+		<v-text-field v-model="editedItem.desc" label="Description"></v-text-field>
+		</v-flex>
 		</v-layout>
 		</v-container>
 		</v-card-text>
@@ -46,7 +49,7 @@
 				<!-- <td></td> -->
 				<td>{{ props.item.name }}</td>
 				<td>{{ props.item.price }}</td>
-
+				<td>{{ props.item.desc }}</td>
 				<td>
 		          <v-icon
 		            small
@@ -78,7 +81,8 @@
 				dialog: false,
 				editedItem: { // just set up the structure for this item and headers, then the rest will follow
 					name: "",
-					price: ""
+					price: "",
+					desc: ""
 				},
 				rowsChoice: [
 					10,25,50,100,
@@ -95,23 +99,15 @@
 						value: 'price'
 					},
 					{
+						text: 'Description',
+						value: 'desc'
+					},
+					{
 						text: 'Actions',
 
 					}
 				],
 				desserts: [
-					// {
-					// 	name: 'Ice Cream',
-					// 	price: '$2.00'
-					// },
-					// {
-					// 	name: 'Cake',
-					// 	price: '$4.50'
-					// },
-					// {
-					// 	name: 'Brownie',
-					// 	price: '$3.00'
-					// }
 				]
 			}
 		},
