@@ -8,7 +8,7 @@
 
 
 
-		<v-dialog v-model="dialog" max-width="500px">
+		<v-dialog v-model="dialog" max-width="80%">
 			<template v-slot:activator="{ on }">
 				<v-btn color="primary" dark class="mb-2" v-on="on">Add Dessert</v-btn>
 			</template>
@@ -22,23 +22,18 @@
 					<v-container grid-list-md>
 						<v-layout wrap>
 							<v-flex xs12 sm6 md4>
-								<v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
+								<!-- <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field> -->
 								<v-autocomplete
+								label="Dessert name"
 								v-model="editedItem.name"
 								:items="dessertList"
 								>
-									<template v-slot:append-outer>
+<!-- 									<template v-slot:append-outer>
 										<v-slide-x-reverse-transition
 										mode="out-in"
 										>
-											<v-icon
-											:key="`icon-${isEditing}`"
-											:color="isEditing ? 'success' : 'info'"
-											@click="isEditing = !isEditing"
-											v-text="isEditing ? 'mdi-check-outline' : 'mdi-circle-edit-outline'"
-											></v-icon>
 										</v-slide-x-reverse-transition>
-									</template>
+									</template> -->
 								</v-autocomplete>
 							</v-flex>
 
@@ -92,32 +87,43 @@
 			</template>
 		</v-data-table>
 
+		<br>
+		<v-card>
+			<v-card-title>
+				<span class="headline">{{ formTitle }}</span>
+			</v-card-title>
 
-		<table>
-			<tr>
-				<th>
-					Dessert 1
-				</th>
+			<v-card-text>
+				<v-container grid-list-md>
+					<v-layout wrap>
+						<v-flex xs12 sm6 md4>
+							<v-autocomplete
+							label="Dessert name"
+							v-model="editedItem.name"
+							:items="dessertList"
+							>
+							</v-autocomplete>
+						</v-flex>
 
-			</tr>
-			<tr>
-				<td>
-				<v-autocomplete
-				v-model="dropModel"
-				:items="dessertList"
-				>
-					<template v-slot:append-outer>
-						<v-slide-x-reverse-transition
-						mode="out-in"
-						>
-						</v-slide-x-reverse-transition>
-					</template>
-				</v-autocomplete>
+						<v-flex xs12 sm6 md4>
+							<v-text-field v-model="editedItem.price" label="Price"></v-text-field>
+						</v-flex>
+						
+						<v-flex xs12 sm6 md4>
+							<v-text-field v-model="editedItem.desc" label="Description"></v-text-field>
+						</v-flex>
+					</v-layout>
+				</v-container>
+			</v-card-text>
+			{{ editedIndex }}
 
-				{{ dropModel }}
-				</td>
-			</tr>
-		</table>
+			<v-card-actions>
+				<v-spacer></v-spacer>
+				<!-- <v-btn color="blue darken-1" flat v-on:click="close">Cancel</v-btn> -->
+				<v-btn color="blue darken-1" flat v-on:click="save">Save</v-btn>
+			</v-card-actions>
+		</v-card>
+		{{ editedIndex }}
 
 	</div>
 </v-app>
@@ -156,18 +162,6 @@
 					}
 				],
 				desserts: [
-					// {
-					// 	name: 'Ice Cream',
-					// 	price: '$2.00'
-					// },
-					// {
-					// 	name: 'Cake',
-					// 	price: '$4.50'
-					// },
-					// {
-					// 	name: 'Brownie',
-					// 	price: '$3.00'
-					// }
 				],
 				dessertList: [
 					'Ice Cream', 'Chocolate Ice Cream', 'Chocolate Mud Pie', 'Chocolate Brownie', 'White Chocolate Cake', 'Dark Choclate Cake', 'Waffles with Cream Cheese', 'Waffles with Ice Cream'
